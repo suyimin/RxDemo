@@ -1,0 +1,38 @@
+/build
+/products
+.gradle
+/.idea/workspace.xml
+.idea
+/.idea/
+/local.properties
+*.iml
+/modules
+.settings.gradle
+
+
+# built application files
+*.ap_
+
+# files for the dex VM
+*.dex
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+*target/
+*build/
+.gradle/
+.idea/
+RengwuxianRxjava.iml
+gradle.properties
+/gradle.properties
+gen-external-apklibs/
+
+# Eclipse project files
+.classpath
+.project
+
+# Mac os
+.DS_Store
