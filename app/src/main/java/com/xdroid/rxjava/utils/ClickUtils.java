@@ -29,7 +29,7 @@ public class ClickUtils {
             Log.d(TAG,"lastClickTime:" + lastClickTime);
             Log.d(TAG,"时间间隔:"+(nowTime - lastClickTime));
         }
-        if ((nowTime - lastClickTime) < 100000) {
+        if ((nowTime - lastClickTime) < 500) {
 
             if (isDebug){
                 Log.d(TAG,"快速点击");

@@ -119,7 +119,7 @@ public class RxDemoActivity extends AppCompatActivity {
     }
 
     /**
-     * 0:RxJava基础练习
+     * 0:RxJava基础练习==================================================
      * 概念解释
      * 1:被观察者,事件源:它决定什么时候触发事件以及触发怎样的事件
      * 2:观察者:它决定事件触发的时候将有怎样的行为
@@ -173,7 +173,7 @@ public class RxDemoActivity extends AppCompatActivity {
 
 
     /**
-     * 1:快捷创建事件队列 Observable.just(T...)
+     * 1:快捷创建事件队列 Observable.just(T...)==================================================
      * create() 方法是 RxJava 最基本的创造事件序列的方法。
      * 基于这个方法， RxJava 还提供了一些方法用来快捷创建事件队列，例如just(T...): 将传入的参数依次发送出来.
      * 简化:观察者的创建,RxJava快捷创建事件队列的方法:just(T...):
@@ -214,7 +214,7 @@ public class RxDemoActivity extends AppCompatActivity {
 
 
     /**
-     * 2:快捷创建事件队列 Observable.from(T[]) / from(Iterable<? extends T>
+     * 2:快捷创建事件队列 Observable.from(T[]) / from(Iterable<? extends T>============================
      */
     private void method2() {
 
@@ -254,7 +254,7 @@ public class RxDemoActivity extends AppCompatActivity {
     }
 
     /**
-     * 3: subscribe()支持不完整定义的回调
+     * 3: subscribe()支持不完整定义的回调==================================================
      * 对观察者的简化
      * subscribe一个参数的不完整定义的回调
      * subscribe(final Action1<? super T> onNext)
@@ -360,7 +360,7 @@ public class RxDemoActivity extends AppCompatActivity {
     }
 
     /**
-     * 4: Action0和Action1 讲解
+     * 4: Action0和Action1 讲解==================================================
      *
      * Action0 是 RxJava 的一个接口，它只有一个方法 call()，这个方法是无参无返回值的；
      * 由于 onCompleted() 方法也是无参无返回值的，因此 Action0 可以被当成一个包装对象，
@@ -377,7 +377,7 @@ public class RxDemoActivity extends AppCompatActivity {
 
 
     /**
-     * 5: 推荐两个好用的日志查看工具
+     * 5: 推荐两个好用的日志查看工具==================================================
      * 1.[logger](https://github.com/orhanobut/logger) | 一个简洁,优雅,功能强大的Android日志输出工具
      * 2.[pidcat](https://github.com/JakeWharton/pidcat)|JakeWharton项目一个简洁,优雅的,彩色日志终端查看库|在终端过滤日志信息
      * 使用com.github.orhanobut:logger 库可以查看当前的线程
@@ -400,7 +400,7 @@ public class RxDemoActivity extends AppCompatActivity {
 
 
     /**
-     * 6 线程控制-Scheduler
+     * 6 线程控制-Scheduler==================================================
      * 显示图片
      * 后台线程取数据，主线程显示
      * 加载图片将会发生在 IO 线程，而设置图片则被设定在了主线程。
@@ -409,7 +409,8 @@ public class RxDemoActivity extends AppCompatActivity {
     private void method6() {
 
         final int drawableRes = R.mipmap.launcher;
-        Observable.create(new Observable.OnSubscribe<Drawable>() { //1:被观察者
+        // 1:被观察者
+        Observable.create(new Observable.OnSubscribe<Drawable>() {
             @Override
             public void call(Subscriber<? super Drawable> subscriber) {
                 Logger.d("被观察者");
@@ -418,7 +419,8 @@ public class RxDemoActivity extends AppCompatActivity {
                 subscriber.onCompleted();
             }
         })
-                //事件产生的线程。指定 subscribe() 发生在 IO 线程
+                // 事件产生的线程。
+                // 指定 subscribe() 发生在 IO 线程
                 .subscribeOn(Schedulers.io())
                 // doOnSubscribe() 之后有 observeOn() 的话，它将执行在离它最近的 observeOn() 所指定的线程。
                 // 这里将执行在主线程中
@@ -426,12 +428,16 @@ public class RxDemoActivity extends AppCompatActivity {
                     @Override
                     public void call() {
                         if (mProgressBar != null) {
-                            mProgressBar.setVisibility(View.VISIBLE);//显示一个等待的ProgressBar--需要在主线程中执行
+                            // 显示一个等待的ProgressBar
+                            // 需要在主线程中执行
+                            mProgressBar.setVisibility(View.VISIBLE);
                         }
                     }
                 })
-                .observeOn(AndroidSchedulers.mainThread())//指定 Subscriber 所运行在的线程。或者叫做事件消费的线程
-                .subscribe(new Subscriber<Drawable>() {   //3:订阅 //2:观察者
+                //指定 Subscriber 所运行在的线程。或者叫做事件消费的线程
+                .observeOn(AndroidSchedulers.mainThread())
+                // 3:订阅 // 2:观察者
+                .subscribe(new Subscriber<Drawable>() {
                     @Override
                     public void onCompleted() {
                         if (mProgressBar != null) {
@@ -464,32 +470,41 @@ public class RxDemoActivity extends AppCompatActivity {
 
     }
 
-    //---------------------------------------7: 变换 map()-------------------------------------------------------------
+    /**
+     * 7: 变换 map()==================================================
+     */
     private void method7() {
         final int drawableRes = R.mipmap.launcher;
 
-        //1:被观察者
-        Observable.just(drawableRes)//输入类型 int
+        // 1:被观察者
+        Observable.just(drawableRes)
                 .map(new Func1<Integer, Drawable>() {
 
                     @Override
-                    public Drawable call(Integer integer) {// 参数类型 String
+                    public Drawable call(Integer integer) {
                         Logger.d("integer:" + integer);
                         return ContextCompat.getDrawable(RxJavaApplication.getApplication(), integer);
                     }
                 })
-                .subscribeOn(Schedulers.io())//事件产生的线程。指定 subscribe() 发生在 IO 线程
-                //doOnSubscribe() 之后有 observeOn() 的话，它将执行在离它最近的 observeOn() 所指定的线程。这里将执行在主线程中
+                // 事件产生的线程。指定 subscribe() 发生在 IO 线程
+                .subscribeOn(Schedulers.io())
+                // doOnSubscribe() 之后有 observeOn() 的话，它将执行在离它最近的 observeOn() 所指定的线程。
+                // 这里将执行在主线程中。
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
                         if (mProgressBar != null) {
-                            mProgressBar.setVisibility(View.VISIBLE);//显示一个等待的ProgressBar--需要在主线程中执行
+                            // 显示一个等待的ProgressBar
+                            // 需要在主线程中执行
+                            mProgressBar.setVisibility(View.VISIBLE);
                         }
                     }
                 })
-                .observeOn(AndroidSchedulers.mainThread())//指定 Subscriber 所运行在的线程。或者叫做事件消费的线程
-                .subscribe(new Subscriber<Drawable>() {  //3:订阅 //2:观察者
+                // 指定 Subscriber 所运行在的线程。
+                // 或者叫做事件消费的线程
+                .observeOn(AndroidSchedulers.mainThread())
+                // 3:订阅 // 2:观察者
+                .subscribe(new Subscriber<Drawable>() {
                     @Override
                     public void onCompleted() {
                         if (mProgressBar != null) {
@@ -518,9 +533,10 @@ public class RxDemoActivity extends AppCompatActivity {
                 });
     }
 
-    //---------------------------------------8: 练习 中途休息一下-------------------------------------------------------------
 
-    //演示嵌套循环
+    /**
+     * 8: 演示嵌套循环==================================================
+     */
     private void method8() {
         ArrayList<Student> students = DataFactory.getData();
         int size = students.size();
@@ -535,9 +551,7 @@ public class RxDemoActivity extends AppCompatActivity {
 
 
     /**
-     * 需要:依次输入学生的姓名:将每个学生(实体对象)依次发射出去
-     * RxJava解决方案:
-     * {@link #method8()}
+     * 依次输出学生的姓名:将每个学生(实体对象)依次发射出去
      */
     private void method9() {
         //just(T...): 将传入的参数依次发送出来,实现遍历的目的
@@ -554,9 +568,7 @@ public class RxDemoActivity extends AppCompatActivity {
 
 
     /**
-     * 需要:输出学生的姓名:将每个学生的(姓名)依次发射出去
-     * RxJava解决方案
-     * {@link #method9()}
+     * 输出学生的姓名:将每个学生的(姓名)依次发射出去
      */
     private void method10() {
 
@@ -602,10 +614,7 @@ public class RxDemoActivity extends AppCompatActivity {
     }
 
     /**
-     * 需要:输出学生的姓名:将每个学生的(姓名)依次发射出去,对method9()的简化
-     * RxJava解决方案
-     * 输出学生的姓名
-     * {@link #method10()}
+     * 输出学生的姓名:将每个学生的(姓名)依次发射出去
      */
     private void method11() {
         Observable.from(DataFactory.getData())
@@ -626,13 +635,12 @@ public class RxDemoActivity extends AppCompatActivity {
 
     }
 
-    //---------------------------------------9: 引入flatmap()-------------------------------------------------------------
 
     /**
+     * 9: 引入flatmap()==================================================
      * 需要:输出每一个学生所有选修的课程
      * 嵌套循环的RxJava解决方案
      * 输出每一个学生选修的课程
-     * {@link #method11()}
      */
     private void method12() {
 
@@ -666,9 +674,8 @@ public class RxDemoActivity extends AppCompatActivity {
     }
 
     /**
-     * 需要:输出每一个学生选修的课程,对method12的简化
+     * 需要:输出每一个学生选修的课程
      * 嵌套循环的RxJava解决方案
-     * {@link #method12()}
      * Student->ArrayList<Course>
      */
     private void method13() {
@@ -692,12 +699,10 @@ public class RxDemoActivity extends AppCompatActivity {
                 });
     }
 
-    //---------------------------------------10: flatMap()的使用-------------------------------------------------------------
-
     /**
-     * 需要:输出每一个学生选修的课程,对method13的简化
+     * flatMap()的使用
+     * 需要:输出每一个学生选修的课程
      * 嵌套循环的RxJava解决方案
-     * {@link #method13()}
      * Student -> ArrayList<Course> -> Observable<Course> ->
      */
     private void method14() {
@@ -732,14 +737,11 @@ public class RxDemoActivity extends AppCompatActivity {
     }
 
 
-    //---------------------------------------10: RxBinding的引入-------------------------------------------------------------
-
-
     /**
+     * 10: RxBinding的引入==================================================
      * 需要防止快速连续点击,短时间内连续点击.
      */
     private void method15() {
-
 
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -761,7 +763,6 @@ public class RxDemoActivity extends AppCompatActivity {
     }
 
     /**
-     * RxBinding
      * RxBinding 是 Jake Wharton 的一个开源库，它提供了一套在 Android 平台上的基于 RxJava 的 Binding API。
      * 所谓 Binding，就是类似设置 OnClickListener 、设置 TextWatcher 这样的注册绑定对象的 API。
      * 举个设置点击监听的例子。使用 RxBinding ，可以把事件监听用这样的方法来设置：
@@ -769,7 +770,8 @@ public class RxDemoActivity extends AppCompatActivity {
      */
     private void method16() {
         RxView.clicks(mImageView)
-                .throttleFirst(500, TimeUnit.MILLISECONDS)//500ms,第一次点击后,500ms内点击无效,500ms后点击才会响应
+                // 500ms,第一次点击后,500ms内点击无效,500ms后点击才会响应
+                .throttleFirst(500, TimeUnit.MILLISECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Void>() {
@@ -1146,15 +1148,18 @@ public class RxDemoActivity extends AppCompatActivity {
             }
 
             case 15: {
+                method7();
                 method15();
                 break;
             }
             case 16: {
+                method7();
                 method16();
                 break;
             }
 
             case 17: {
+                method7();
                 method17();
                 break;
             }

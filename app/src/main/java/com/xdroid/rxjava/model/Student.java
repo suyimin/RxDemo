@@ -4,9 +4,6 @@ import java.util.ArrayList;
 
 /**
  * 类描述:学生类
- * 创建人:launcher.myemail@gmail.com
- * 创建时间:15-11-10.
- * 备注:
  */
 public class Student {
 
