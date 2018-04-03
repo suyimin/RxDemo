@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        for (int i = 0; i < 23; i++) {
+        for (int i = 0; i < 24; i++) {
             fuctions.add("Fuction " + i);
         }
 

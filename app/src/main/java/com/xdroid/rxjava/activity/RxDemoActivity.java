@@ -824,12 +824,13 @@ public class RxDemoActivity extends AppCompatActivity {
                 });
     }
 
+
     /**
-     * 三、Defer、Just
+     * 11: 操作符==================================================
+     * Range操作符根据出入的初始值n和数目m发射一系列大于等于n的m个值
+     * 其使用也非常方便，仅仅制定初始值和数目就可以了，不用自己去实现对Subscriber的调用。
+     * 例如:实现:输出1,2,3,4,5
      */
-    //操作符号 Range操作符根据出入的初始值n和数目m发射一系列大于等于n的m个值
-    //例如:实现:输出1,2,3,4,5
-    // 其使用也非常方便，仅仅制定初始值和数目就可以了，不用自己去实现对Subscriber的调用
     private void method19() {
         Observable.range(1, 5)
                 .subscribeOn(Schedulers.io())
@@ -843,7 +844,8 @@ public class RxDemoActivity extends AppCompatActivity {
     }
 
     /**
-     * 使用Retrofit网络库,获取androidmalin的GitHub个人信息
+     * 12: RxJava + Retrofit==================================================
+     * 使用Retrofit网络库,获取suyimin的GitHub个人信息
      */
     private void method21() {
 
@@ -851,7 +853,7 @@ public class RxDemoActivity extends AppCompatActivity {
         mImageView.setVisibility(View.GONE);
         mResultTextView.setVisibility(View.VISIBLE);
         mResultTextView.setText("");
-        Call call = RetrofitService.getInstance().createService(GitHubApi.class).getUser("androidmalin");
+        Call call = RetrofitService.getInstance().createService(GitHubApi.class).getUser("suyimin");
 
         //asynchronous
         call.enqueue(new Callback<User>() {
@@ -892,14 +894,14 @@ public class RxDemoActivity extends AppCompatActivity {
     }
 
     /**
-     * 使用Retrofit网络库,同时使用RxJava 获取androidmalin的GitHub个人信息
+     * 使用Retrofit网络库,同时使用RxJava 获取suyimin的GitHub个人信息
      */
     private void method22() {
         //TODO:1:被观察者,数据源
         //TODO:2:观察者
         //TODO:3:订阅,被观察者 被 观察者订阅
 
-        Observable<User> observable = RetrofitService.getInstance().createService(GitHubApi.class).getUserObservable("androidmalin");
+        Observable<User> observable = RetrofitService.getInstance().createService(GitHubApi.class).getUserObservable("suyimin");
         observable
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(new Action0() {
