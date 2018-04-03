@@ -119,21 +119,16 @@ public class RxDemoActivity extends AppCompatActivity {
     }
 
     /**
-     * 故意让程序出现异常,可以用来测试
+     * 0:RxJava基础练习
+     * 概念解释
+     * 1:被观察者,事件源:它决定什么时候触发事件以及触发怎样的事件
+     * 2:观察者:它决定事件触发的时候将有怎样的行为
+     * 3:订阅
      */
-    private void getException() {
-        int errorCode = Integer.valueOf(ERROR);
-    }
-
-    //-----------------------------------------------0:RxJava基础练习-----------------------------------------------------------
-    //概念解释
-    //1:被观察者,事件源:它决定什么时候触发事件以及触发怎样的事件
-    //2:观察者:它决定事件触发的时候将有怎样的行为
-    //3:订阅
     private void method0() {
 
         //1:被观察者,事件源
-        //概念解释:RxJava 使用 Observable.create() 方法来创建一个 Observable ，并为它定义事件触发规则
+        //概念解释:RxJava 使用 Observable.create()方法来创建一个Observable，并为它定义事件触发规则。
         Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
@@ -153,6 +148,7 @@ public class RxDemoActivity extends AppCompatActivity {
          * （对于上面的代码，就是观察者subscriber 将会被调用三次 onNext() 和一次 onCompleted()）。
          * 这样，由被观察者调用了观察者的回调方法，就实现了由被观察者向观察者的事件传递，即观察者模式。
          */
+
         //2:观察者
         Observer<String> observer = new Observer<String>() {
             @Override
@@ -168,7 +164,6 @@ public class RxDemoActivity extends AppCompatActivity {
             @Override
             public void onNext(String s) {
                 Logger.d("观察者-observer:onNext():" + s);
-                // getException();//故意让程序出现异常,用于测试onError()方法的执行....
             }
         };
 
@@ -177,25 +172,13 @@ public class RxDemoActivity extends AppCompatActivity {
     }
 
 
-    //---------------------------------------1:快捷创建事件队列 Observable.just(T...)--------------------------------------------------------------
-
-    // create() 方法是 RxJava 最基本的创造事件序列的方法。基于这个方法， RxJava 还提供了一些方法用来快捷创建事件队列，
-    // 例如just(T...): 将传入的参数依次发送出来.
-
-    //简化:观察者的创建,RxJava快捷创建事件队列的方法:just(T...):
-
     /**
-     * 简化:观察者的创建
-     * {@link #method0()}
+     * 1:快捷创建事件队列 Observable.just(T...)
+     * create() 方法是 RxJava 最基本的创造事件序列的方法。
+     * 基于这个方法， RxJava 还提供了一些方法用来快捷创建事件队列，例如just(T...): 将传入的参数依次发送出来.
+     * 简化:观察者的创建,RxJava快捷创建事件队列的方法:just(T...):
      */
     private void method1() {
-
-
-        //实现步骤
-        //1:被观察者:
-        //2:观察者:
-        //3:订阅-被观察者被观察者订阅
-
 
         //1:被观察者:
         //just(T...): 将传入的参数依次发送出来
@@ -222,7 +205,6 @@ public class RxDemoActivity extends AppCompatActivity {
             @Override
             public void onNext(String s) {
                 Logger.d("观察者-observer:onNext():" + s);
-                //getException();//故意让程序出现异常,用于测试onError()方法的执行....
             }
         };
 
@@ -231,19 +213,10 @@ public class RxDemoActivity extends AppCompatActivity {
     }
 
 
-    //---------------------------------------2:快捷创建事件队列 Observable.from(T[]) / from(Iterable<? extends T>--------------------------------------------------------------
-
     /**
-     * 简化:观察者的创建: RxJava快捷创建事件队列的方法:just(String[] array) 将传入的数组或 Iterable 拆分成具体对象后，依次发送出来
-     * {@link #method1()}
+     * 2:快捷创建事件队列 Observable.from(T[]) / from(Iterable<? extends T>
      */
     private void method2() {
-
-        //实现步骤
-        //1:被观察者
-        //2:观察者
-        //3:订阅-被观察者被观察者订阅
-
 
         String[] array = new String[]{"Hello", "World", "!"};
         //1:被观察者:
@@ -272,7 +245,6 @@ public class RxDemoActivity extends AppCompatActivity {
             public void onNext(Object o) {
                 String str = (String) o;
                 Logger.d("观察者-observer:onNext():" + str);
-                // getException();//故意让程序出现异常,用于测试onError()方法的执行....
             }
         };
 
@@ -281,11 +253,9 @@ public class RxDemoActivity extends AppCompatActivity {
 
     }
 
-    //---------------------------------------3: subscribe()支持不完整定义的回调--------------------------------------------------------------
-
     /**
+     * 3: subscribe()支持不完整定义的回调
      * 对观察者的简化
-     * {@link #method2()}
      * subscribe一个参数的不完整定义的回调
      * subscribe(final Action1<? super T> onNext)
      */
@@ -313,7 +283,6 @@ public class RxDemoActivity extends AppCompatActivity {
     /**
      * 对观察者的简化
      * subscribe两个参数的不完整定义的回调
-     * {@link #method3()}
      * subscribe(final Action1<? super T> onNext, final Action1<Throwable> onError)
      */
     private void method4() {
@@ -390,14 +359,9 @@ public class RxDemoActivity extends AppCompatActivity {
 
     }
 
-    //---------------------------------------4: Action0和Action1 讲解--------------------------------------------------------------
     /**
-     * 肯定有同学对Action0和Action1很困惑,就像当初我刚看到那样子;
-     * 那就听听扔物线给大家讲一下:
+     * 4: Action0和Action1 讲解
      *
-     * MaLin:扔物线大哥,你能够给我们讲解一下Action0和Action1是什么,以及他们之间的区别吗?
-     *
-     * 扔物线:大家好,我简单的解释一下:
      * Action0 是 RxJava 的一个接口，它只有一个方法 call()，这个方法是无参无返回值的；
      * 由于 onCompleted() 方法也是无参无返回值的，因此 Action0 可以被当成一个包装对象，
      * 将 onCompleted() 的内容打包起来将自己作为一个参数传入 subscribe() 以实现不完整定义的回调。
@@ -406,42 +370,41 @@ public class RxDemoActivity extends AppCompatActivity {
      * Action1 也是一个接口，它同样只有一个方法 call(T param)，这个方法也无返回值，但有一个参数；
      * 与 Action0 同理，由于 onNext(T obj) 和 onError(Throwable error) 也是单参数无返回值的，
      * 因此 Action1 可以将 onNext(obj) 和 onError(error) 打包起来传入 subscribe() 以实现不完整定义的回调。
-     * 事实上，虽然 Action0 和 Action1 在 API 中使用最广泛，但 RxJava 是提供了多个 ActionX 形式的接口 (例如 Action2, Action3) 的，
+     * 事实上，虽然 Action0 和 Action1 在 API 中使用最广泛，
+     * 但 RxJava 是提供了多个 ActionX 形式的接口 (例如 Action2, Action3) 的，
      * 它们可以被用以包装不同的无返回值的方法。
      */
 
 
-    //---------------------------------------5: 休息一下!推荐两个好用的日志查看工具-------------------------------------------------------------
-
-    //1.[logger](https://github.com/orhanobut/logger) | 一个简洁,优雅,功能强大的Android日志输出工具
-    //2.[pidcat](https://github.com/JakeWharton/pidcat)|JakeWharton项目一个简洁,优雅的,彩色日志终端查看库|在终端过滤日志信息
-
     /**
+     * 5: 推荐两个好用的日志查看工具
+     * 1.[logger](https://github.com/orhanobut/logger) | 一个简洁,优雅,功能强大的Android日志输出工具
+     * 2.[pidcat](https://github.com/JakeWharton/pidcat)|JakeWharton项目一个简洁,优雅的,彩色日志终端查看库|在终端过滤日志信息
      * 使用com.github.orhanobut:logger 库可以查看当前的线程
      *  ╔════════════════════════════════════════════════════════════════════════════════════════
-     D  ║ Thread: main
-     D  ╟────────────────────────────────────────────────────────────────────────────────────────
-     D  ║ RxDemoActivity$11.onNext  (RxDemoActivity.java:338)
-     D  ║    RxDemoActivity$11.onNext  (RxDemoActivity.java:354)
-     D  ╟────────────────────────────────────────────────────────────────────────────────────────
-     D  ║ 观察者 onNext()
-     D  ╚════════════════════════════════════════════════════════════════════════════════════════
-     D  ╔════════════════════════════════════════════════════════════════════════════════════════
-     D  ║ Thread: main
-     D  ╟────────────────────────────────────────────────────────────────────────────────────────
-     D  ║ SafeSubscriber.onCompleted  (SafeSubscriber.java:83)
-     D  ║    RxDemoActivity$11.onCompleted  (RxDemoActivity.java:341)
-     D  ╟────────────────────────────────────────────────────────────────────────────────────────
-     D  ║ 观察者 onCompleted()
-     D  ╚════════════════════════════════════════════════════════════════════════════════════════
+     *  ╟────────────────────────────────────────────────────────────────────────────────────────
+     *  ║ RxDemoActivity$11.onNext  (RxDemoActivity.java:338)
+     *  ║    RxDemoActivity$11.onNext  (RxDemoActivity.java:354)
+     *  ╟────────────────────────────────────────────────────────────────────────────────────────
+     *  ║ 观察者 onNext()
+     *  ╚════════════════════════════════════════════════════════════════════════════════════════
+     *  ╔════════════════════════════════════════════════════════════════════════════════════════
+     *  ║ Thread: main
+     *  ╟────────────────────────────────────────────────────────────────────────────────────────
+     *  ║ SafeSubscriber.onCompleted  (SafeSubscriber.java:83)
+     *  ║    RxDemoActivity$11.onCompleted  (RxDemoActivity.java:341)
+     *  ╟────────────────────────────────────────────────────────────────────────────────────────
+     *  ║ 观察者 onCompleted()
+     *  ╚════════════════════════════════════════════════════════════════════════════════════════
      */
 
-    //---------------------------------------6 线程控制-Scheduler-------------------------------------------------------------
 
     /**
+     * 6 线程控制-Scheduler
      * 显示图片
      * 后台线程取数据，主线程显示
-     * 加载图片将会发生在 IO 线程，而设置图片则被设定在了主线程。这就意味着，即使加载图片耗费了几十甚至几百毫秒的时间，也不会造成丝毫界面的卡顿。
+     * 加载图片将会发生在 IO 线程，而设置图片则被设定在了主线程。
+     * 这就意味着，即使加载图片耗费了几十甚至几百毫秒的时间，也不会造成丝毫界面的卡顿。
      */
     private void method6() {
 
@@ -455,8 +418,10 @@ public class RxDemoActivity extends AppCompatActivity {
                 subscriber.onCompleted();
             }
         })
-                .subscribeOn(Schedulers.io())//事件产生的线程。指定 subscribe() 发生在 IO 线程
-                // doOnSubscribe() 之后有 observeOn() 的话，它将执行在离它最近的 observeOn() 所指定的线程。这里将执行在主线程中
+                //事件产生的线程。指定 subscribe() 发生在 IO 线程
+                .subscribeOn(Schedulers.io())
+                // doOnSubscribe() 之后有 observeOn() 的话，它将执行在离它最近的 observeOn() 所指定的线程。
+                // 这里将执行在主线程中
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
