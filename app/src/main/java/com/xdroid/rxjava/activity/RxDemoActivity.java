@@ -46,11 +46,8 @@ import com.xdroid.rxjava.utils.RxUtils;
 import com.xdroid.rxjava.utils.ToastUtil;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.ResponseBody;
@@ -897,9 +894,9 @@ public class RxDemoActivity extends AppCompatActivity {
      * 使用Retrofit网络库,同时使用RxJava 获取suyimin的GitHub个人信息
      */
     private void method22() {
-        //TODO:1:被观察者,数据源
-        //TODO:2:观察者
-        //TODO:3:订阅,被观察者 被 观察者订阅
+        //1:被观察者,数据源
+        //2:观察者
+        //3:订阅,被观察者 被 观察者订阅
 
         Observable<User> observable = RetrofitService.getInstance().createService(GitHubApi.class).getUserObservable("suyimin");
         observable
@@ -951,10 +948,9 @@ public class RxDemoActivity extends AppCompatActivity {
 
         mImageView.setVisibility(View.GONE);
         mResultTextView.setVisibility(View.GONE);
-        mImageView.setVisibility(View.GONE);
 
         mResultListView = (ListView) findViewById(R.id.lv_list);
-        mAdapter = new ArrayAdapter<String>(RxDemoActivity.this, R.layout.item_log, R.id.item_log, new ArrayList<String>());
+        mAdapter = new ArrayAdapter<>(RxDemoActivity.this, R.layout.item_log, R.id.item_log, new ArrayList<String>());
         mResultListView.setAdapter(mAdapter);
 
         mSubscription.add(RetrofitService.getInstance().createService(GitHubApi.class).getContributorsObservable("square", "retrofit")
@@ -1000,11 +996,9 @@ public class RxDemoActivity extends AppCompatActivity {
                 }));
     }
 
-
-    private static final int COUNT = 10;
-    private static final int TIME_ALL = 5000;
-    private ArrayList<Long> timeList = new ArrayList<>();
-
+    /**
+     * 3秒内点击次数>=5， Toast提示
+     */
     private void method20() {
 
         final int COUNT = 5;
@@ -1044,28 +1038,11 @@ public class RxDemoActivity extends AppCompatActivity {
                 if (aBoolean) {
                     Toast.makeText(RxDemoActivity.this, "3秒内点击超过了" + allList.size(), Toast.LENGTH_SHORT).show();
                     allList.clear();
-                } else {
-                    // Toast.makeText(RxDemoActivity.this, "ok "+timeList.size(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    public static String timeLongToString(long data) {
-        Date date = new Date(data);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        return formatter.format(date);
-    }
-
-
-    private void log(final String str) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Log.d(TAG, str);
-            }
-        });
-    }
 
     /**
      * 测试这些每个知识点的功能
@@ -1178,6 +1155,7 @@ public class RxDemoActivity extends AppCompatActivity {
             }
 
             case 20: {
+                method7();
                 method20();
                 break;
             }
@@ -1195,6 +1173,16 @@ public class RxDemoActivity extends AppCompatActivity {
 
             case 23: {
                 method23();
+                break;
+            }
+
+            case 24: {
+                miZhiSuoJinAndNestedLoopAndCallbackHell();
+                break;
+            }
+
+            case 25: {
+                rxJavaSolveMiZhiSuoJinAndNestedLoopAndCallbackHell();
                 break;
             }
             default: {
@@ -1243,7 +1231,6 @@ public class RxDemoActivity extends AppCompatActivity {
             mManyBitmapSuperposition = null;
         }
 
-        //@link http://blog.csdn.net/yanzi1225627/article/details/8236309
         if (mCanvas != null) {
             //清屏
             Paint paint = new Paint();
@@ -1256,16 +1243,11 @@ public class RxDemoActivity extends AppCompatActivity {
     }
 
     /**
-     * 做法也非常简单，在Activity onDestory时候从view的rootview开始，
+     * 在Activity onDestory时候从view的rootview开始，
      * 递归释放所有子view涉及的图片，背景，DrawingCache，监听器等等资源，
      * 让Activity成为一个不占资源的空壳，泄露了也不会导致图片资源被持有。
      *
      * @param view:the root view of the layout
-     * @description Unbind the rootView
-     * @author launcher.myemail@gmail.com
-     * @link http://stackoverflow.com/questions/9461364/exception-in-unbinddrawables
-     * http://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=400656149&idx=1&sn=122b4f4965fafebf78ec0b4fce2ef62a&3rd=MzA3MDU4NTYzMw==&scene=6#rd
-     * @since 2015.12.16
      */
     private void unBindDrawables(View view) {
         if (view != null) {
@@ -1294,9 +1276,6 @@ public class RxDemoActivity extends AppCompatActivity {
      * Remove an onclick listener
      *
      * @param view
-     * @author launcher.myemail@gmail.com
-     * @website https://github.com/androidmalin
-     * @data 2016/01/22
      */
     private void unBingListener(View view) {
         if (view != null) {
@@ -1318,19 +1297,17 @@ public class RxDemoActivity extends AppCompatActivity {
         }
     }
 
-    //-----------------------------------谜之缩进--嵌套循环--回调地狱 -----------------------------------------------------------
-
     /**
-     * 实现的功能:获取assets文件夹下所有文件夹中的jpg图片,并且将所有的图片画到一个ImageView上,没有实际的用处,只是为了说明问题--- 谜之缩进--嵌套循环--回调地狱
+     * 实现的功能:获取assets文件夹下所有文件夹中的jpg图片,并且将所有的图片画到一个ImageView上
      * 不使用RxJava的写法-- 谜之缩进--回调地狱
+     * 思路:需要以下6个步骤完成
+     * 1:遍历获取assets文件夹下所有的文件夹的名称
+     * 2:遍历获取获取assets文件夹下某个文件夹中所有图片路径的集合
+     * 3:过滤掉非JPG格式的图片
+     * 4:获取某个路径下图片的bitmap
+     * 5:将Bitmap绘制到画布上
+     * 6:循环结束后更新UI,给ImageView设置最后绘制完成后的Bitmap,隐藏ProgressBar
      */
-    //思路:需要以下6个步骤完成
-    //1:遍历获取assets文件夹下所有的文件夹的名称
-    //2:遍历获取获取assets文件夹下某个文件夹中所有图片路径的集合
-    //3:过滤掉非JPG格式的图片
-    //4:获取某个路径下图片的bitmap
-    //5:将Bitmap绘制到画布上
-    //6:循环结束后更新UI,给ImageView设置最后绘制完成后的Bitmap,隐藏ProgressBar
     private void miZhiSuoJinAndNestedLoopAndCallbackHell() {
         new Thread(new Runnable() {
             @Override
@@ -1389,16 +1366,17 @@ public class RxDemoActivity extends AppCompatActivity {
     /**
      * 就是循环在画布上画图,呈现一种整齐的线性分布:像方格
      * 所有绘制都绘制到了创建Canvas时传入的Bitmap上面
+     * <p>
+     * 实现思路:
+     * 1:产生和手机屏幕尺寸同样大小的Bitmap
+     * 2:以Bitmap对象创建一个画布，将内容都绘制在Bitmap上,这个Bitmap用来存储所有绘制在Canvas上的像素信息.
+     * 3:这里将所有图片压缩成了相同的尺寸均为正方形图(64px*64px)
+     * 4:计算获取绘制每个Bitmap的坐标,距离屏幕左边和上边的距离,距离左边的距离不断自增,距离顶部的距离循环自增
+     * 5:将Bitmap画到指定坐标
      *
      * @param bitmap:每张图片对应的Bitamp
      * @param mCounter:一个自增的整数从0开始
      */
-    //实现思路:
-    //1:产生和手机屏幕尺寸同样大小的Bitmap
-    //2:以Bitmap对象创建一个画布，将内容都绘制在Bitmap上,这个Bitmap用来存储所有绘制在Canvas上的像素信息.
-    //3:这里将所有图片压缩成了相同的尺寸均为正方形图(64px*64px)
-    //4:计算获取绘制每个Bitmap的坐标,距离屏幕左边和上边的距离,距离左边的距离不断自增,距离顶部的距离循环自增
-    //5:将Bitmap画到指定坐标
     private void createSingleImageFromMultipleImages(Bitmap bitmap, int mCounter) {
         if (mCounter == 0) {
             //1:产生和手机屏幕尺寸同样大小的Bitmap
@@ -1428,24 +1406,9 @@ public class RxDemoActivity extends AppCompatActivity {
         }
     }
 
-
     /**
-     * 用于测试除法和取余
+     * RxJava的实现--链式调用--十分简洁
      */
-    private void showMath() {
-        String TAG = "Math";
-        for (int i = 0; i < 100; i++) {
-            int ss = i / 10;
-            int ww = i % 10;
-            Log.d(TAG, i + "/10 ==" + ss);
-            Log.d(TAG, i + "%10 ==" + ww);
-        }
-    }
-
-
-    //-----------------------------------RxJava的实现--链式调用--十分简洁 -----------------------------------------------------------
-
-
     private void rxJavaSolveMiZhiSuoJinAndNestedLoopAndCallbackHell() {
         //1:被观察者:
 
