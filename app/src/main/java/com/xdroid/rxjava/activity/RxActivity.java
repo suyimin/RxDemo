@@ -33,7 +33,7 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class RxActivity extends AppCompatActivity {
-    private static String TAG = "MainActivity";
+    private static String TAG = "RxActivity";
     private static String URL = "https://droidcon.in/_themes/droidcon2015/img/logo.png";
 
     private EditText mEditText;
