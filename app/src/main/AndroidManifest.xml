@@ -16,6 +16,9 @@
         <activity android:name=".activity.RxOp1Activity" />
         <activity android:name=".activity.RxOp2Activity" />
         <activity android:name=".activity.RxOp3Activity" />
+        <activity android:name=".activity.RxOp4Activity" />
+        <activity android:name=".activity.RxOp5Activity" />
+        <activity android:name=".activity.RxOp6Activity" />
 
         <activity android:name=".activity.MainActivity">
             <intent-filter>

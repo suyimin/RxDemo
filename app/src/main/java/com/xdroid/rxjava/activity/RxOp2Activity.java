@@ -36,14 +36,14 @@ public class RxOp2Activity extends AppCompatActivity {
         mButton = (Button) findViewById(R.id.button);
         mImageView = (ImageView) findViewById(R.id.image);
 
-//        map();
-//        cast();
-//        flatMap();
-//        concatMap();
-//        switchMap();
-//        groupBy();
-//        scan();
-//        buffer();
+        map();
+        cast();
+        flatMap();
+        concatMap();
+        switchMap();
+        groupBy();
+        scan();
+        buffer();
         window();
 
     }

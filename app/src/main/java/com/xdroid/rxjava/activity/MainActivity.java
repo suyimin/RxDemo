@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 33; i++) {
             fuctions.add("Fuction " + i);
         }
 
@@ -52,7 +52,16 @@ public class MainActivity extends AppCompatActivity {
             holder.tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (position == 29) {
+                    if (position == 32) {
+                        Intent intent = new Intent(MainActivity.this, RxOp6Activity.class);
+                        startActivity(intent);
+                    } else if (position == 31) {
+                        Intent intent = new Intent(MainActivity.this, RxOp5Activity.class);
+                        startActivity(intent);
+                    } else if (position == 30) {
+                        Intent intent = new Intent(MainActivity.this, RxOp4Activity.class);
+                        startActivity(intent);
+                    } else if (position == 29) {
                         Intent intent = new Intent(MainActivity.this, RxOp3Activity.class);
                         startActivity(intent);
                     } else if (position == 28) {
